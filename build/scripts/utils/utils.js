@@ -16,3 +16,11 @@ function createWindow(options, callback) {
         brows.windows.create(options, callback);
     }
 }
+
+function createTab(options, callback) {
+    if (!isChrome) {
+        brows.tabs.create(options).then(callback);
+    } else {
+        brows.tabs.create(options, callback);
+    }
+}

@@ -38,7 +38,6 @@
                 "scripts/utils/utils.js",
                 
                 "scripts/consts.js",
-                "scripts/assignments/assignmentReader_cs.js",
                 "scripts/messages/messages.js",
                 "scripts/messages/messages_cs.js"
             ],

@@ -19,15 +19,22 @@ class Task {
     }
 
     removeTab(id) {
-
+        this.tabs.splice(this.tabs.indexOf(id), 1);
+        console.log(this.tabs);
     }
 
     assignTabStep(id, step, info) {
         var that = this;
+        console.log("Before assign " + id);
+        console.log("Assigning step to " + JSON.stringify(that.steps));
+        console.log(step);
+        that.steps[id] = step;
 
         var ret = new Promise(function (resolve, reject) {
             MessageHandler.onLoad(id, function (id, port) {
-                that.steps[id] = step;
+                console.log("After assign " + id + " to ");
+                console.log(step);
+                console.log(JSON.stringify(that.steps));
     
                 port.postMessage(Messages.form(
                     Messages.protocols.STEP_INIT,
@@ -40,8 +47,10 @@ class Task {
     
                 port.onMessage.addListener(function (msg) {
                     if (msg.protocol == Messages.protocols.STEP_END) {
-                        that.steps[id].onFinish(msg.message);
+                        console.log("Before finish " + id + " --> " + JSON.stringify(that.steps));
+                        var func = that.steps[id].onFinish;
                         that.steps[id] = undefined;
+                        func(id, that, msg.message);
                     }
                 });
     
@@ -58,7 +67,7 @@ class Step {
         this.step = step;
     }
 
-    onFinish(info) {
+    onFinish(id, task, info) {
 
     }
 }
