@@ -75,10 +75,10 @@ IntoAssignments.test = function () {
     return false;
 }
 
-IntoAssignments.finish = function (dt) {
-    finish(dt);
+IntoAssignments.finish = function (succ) {
+    finish(succ);
     IntoAssignments.button.click();
-    //Messages.createPort();
+    Messages.createPort();
 }
 
 IntoAssignments.execute = function() {
@@ -86,16 +86,54 @@ IntoAssignments.execute = function() {
 
     if (!IntoAssignments.test()) {
         var int = setInterval(function () {
+            var dt = (new Date() - t0) / 1000;
+
+            if (dt > 20) {
+                IntoAssignments.finish(false);
+                return;
+            }
             if (IntoAssignments.test()) {
                 clearInterval(int);
-                IntoAssignments.finish((new Date() - t0) / 1000);
+                IntoAssignments.finish(true);
             }
         }, 200);
     } else {
-        IntoAssignments.finish((new Date() - t0) / 1000);
+        IntoAssignments.finish(true);
     }
+}
+
+
+
+GetAssignmentsLink = {};
+
+// GetAssignmentsLink.test = function () {
+//     var buttons = document.getElementsByClassName("btn btn-default");
+
+//     for (var i = 0; i < buttons.length; i++) {
+//         var button = buttons[i];
+
+//         if (button.children.length == 1) {
+//             if (button.children[0].children.length == 1) {
+//                 if (button.children[0].children[0].innerHTML == "Assignments") {
+//                     IntoAssignments.button = button;
+//                     return true;
+//                 }
+//             }
+//         }
+//     }
+
+//     return false;
+// }
+
+GetAssignmentsLink.finish = function (url) {
+    finish(url);
+}
+
+GetAssignmentsLink.execute = function() {
+    GetAssignmentsLink.finish(window.location.href);
 }
 
 Tasks.ScanTeams.OpenHome = OpenHome;
 Tasks.ScanTeams.IntoClass = IntoClass;
 Tasks.ScanTeams.IntoAssignments = IntoAssignments;
+Tasks.ScanTeams.GetAssignmentsLink = GetAssignmentsLink;

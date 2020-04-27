@@ -43,33 +43,25 @@ class ScanTeams_IntoAssignments extends Step {
 
     onFinish(id, task, succ) {
         task.removeTab(id);
-        brows.tabs.remove(id);
-        //task.assignTabStep(id, new ScanTeams_GetAssignmentsLink(), 0);
-        //console.log(dt);
+
+        if (succ) {
+            task.assignTabStep(id, Tasks.ScanTeams.GetAssignmentsLink);
+        } else {
+            reloadTab(id, {});
+            task.assignTabStep(id, Tasks.ScanTeams.IntoAssignments);
+        }
     }
 }
-
-// class ScanTeams_Reload extends Step {
-//     constructor() {
-//         super("Reload");
-//     }
-
-//     onFinish(id, task, succ) {
-//         task.removeTab(id);
-//         brows.tabs.remove(id);
-//         task.assignTabStep(id, new ScanTeams_GetAssignmentsLink(), 0);
-//     }
-//}
 
 class ScanTeams_GetAssignmentsLink extends Step {
     constructor() {
         super("GetAssignmentsLink");
     }
 
-    onFinish(id, task) {
-        console.log(id);
-        //task.removeTab(id);
-        console.log(id);
+    onFinish(id, task, link) {
+        task.removeTab(id);
+        brows.tabs.remove(id);
+        console.log(link);
         //task.assignTabStep(id, new ScanTeams_GetAssignmentsLink(), 0);
     }
 }
@@ -100,3 +92,4 @@ class ScanTeams extends Task {
 Tasks.ScanTeams.OpenHome = new ScanTeams_OpenHome();
 Tasks.ScanTeams.IntoClass = new ScanTeams_IntoClass();
 Tasks.ScanTeams.IntoAssignments = new ScanTeams_IntoAssignments();
+Tasks.ScanTeams.GetAssignmentsLink = new ScanTeams_GetAssignmentsLink();
