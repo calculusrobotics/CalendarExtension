@@ -36,6 +36,7 @@ IntoClass.test = function() {
 IntoClass.finish = function (index) {
     finish();
     IntoClass.teams[index].click();
+    Messages.createPort();
 }
 
 IntoClass.execute = function(index) {
@@ -57,7 +58,6 @@ IntoAssignments = {};
 
 IntoAssignments.test = function () {
     var buttons = document.getElementsByClassName("btn btn-default");
-    console.log(buttons.length);
 
     for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
@@ -65,7 +65,6 @@ IntoAssignments.test = function () {
         if (button.children.length == 1) {
             if (button.children[0].children.length == 1) {
                 if (button.children[0].children[0].innerHTML == "Assignments") {
-                    console.log("Found!");
                     IntoAssignments.button = button;
                     return true;
                 }
@@ -76,21 +75,24 @@ IntoAssignments.test = function () {
     return false;
 }
 
-IntoAssignments.finish = function () {
-    finish();
+IntoAssignments.finish = function (dt) {
+    finish(dt);
     IntoAssignments.button.click();
+    //Messages.createPort();
 }
 
 IntoAssignments.execute = function() {
+    var t0 = new Date();
+
     if (!IntoAssignments.test()) {
         var int = setInterval(function () {
             if (IntoAssignments.test()) {
                 clearInterval(int);
-                IntoAssignments.finish();
+                IntoAssignments.finish((new Date() - t0) / 1000);
             }
         }, 200);
     } else {
-        IntoAssignments.finish();
+        IntoAssignments.finish((new Date() - t0) / 1000);
     }
 }
 

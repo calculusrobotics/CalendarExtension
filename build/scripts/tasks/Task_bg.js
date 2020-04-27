@@ -20,22 +20,21 @@ class Task {
 
     removeTab(id) {
         this.tabs.splice(this.tabs.indexOf(id), 1);
-        console.log(this.tabs);
+        MessageHandler.disconnect(id);
     }
 
     assignTabStep(id, step, info) {
         var that = this;
-        console.log("Before assign " + id);
-        console.log("Assigning step to " + JSON.stringify(that.steps));
-        console.log(step);
         that.steps[id] = step;
+        console.log(id + " --> " + step.step);
+
+        var check = true;
+        if (this.tabs.indexOf(id) == -1) {
+            check = false;
+        }
 
         var ret = new Promise(function (resolve, reject) {
-            MessageHandler.onLoad(id, function (id, port) {
-                console.log("After assign " + id + " to ");
-                console.log(step);
-                console.log(JSON.stringify(that.steps));
-    
+            MessageHandler.onLoad(id, function (id1, port) {
                 port.postMessage(Messages.form(
                     Messages.protocols.STEP_INIT,
                     {
@@ -47,15 +46,15 @@ class Task {
     
                 port.onMessage.addListener(function (msg) {
                     if (msg.protocol == Messages.protocols.STEP_END) {
-                        console.log("Before finish " + id + " --> " + JSON.stringify(that.steps));
-                        var func = that.steps[id].onFinish;
-                        that.steps[id] = undefined;
-                        func(id, that, msg.message);
+                        console.log(id1 + " <-- " + msg.message.step);
+                        //var func = that.steps[id1].onFinish;
+                        that.steps[id1] = undefined;
+                        Tasks[that.name][msg.message.step].onFinish(id1, that, msg.message.info);
                     }
                 });
     
                 resolve();
-            });
+            }, check);
         });
 
         return ret;
@@ -71,3 +70,5 @@ class Step {
 
     }
 }
+
+var Tasks = {};

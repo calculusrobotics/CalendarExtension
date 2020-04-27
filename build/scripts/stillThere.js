@@ -4,4 +4,4 @@ setInterval(function () {
     if (elm != undefined && elm.innerHTML.indexOf("Are you still there") != -1) {
         elm.parentNode.removeChild(elm);
     }
-}, 60000);
+}, 10000);
